@@ -191,6 +191,7 @@ nosetests tests/
     * Some entries in the BRENDA flat file use the undocumented comment tags `|...|`. Sometimes only comments delimited by either `(...)` or `|...|` are present, and sometimes both are present. Such comments are now fused together.
     * To make matters more interesting, there may also be extra `|` characters, seemingly inserted at random by BRENDA maintainers. This parser cleans up such spurious characters, then retrieves the (hopefully) correct comment.
 * The SOAP-parsing part has been removed.
+* The refactor/lexer branch has been removed (check out the [forked repository](https://github.com/Midnighter/BRENDA-Parser) for progress on that branch).
 
 ## TODO
 
