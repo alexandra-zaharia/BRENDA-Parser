@@ -40,11 +40,11 @@ In the following, we will briefly survey how information in the BRENDA flat file
 
 For every EC number, the following fields may be accessed:
 
-* `ec_number` -- a string designating the EC number.
-* `comment` -- either `None` or a string representing a comment associated to an EC number.
-* `proteins` -- a dict storing protein information for an EC number. Dict keys are numerical protein identifiers as they appearin the BRENDA flat file between `#...#` tags. Dict values are [`Protein`](#protein-information-protein-class) objects.
-* `references` -- a dict storing literature references for an EC number (see [TODO](#TODO)).
-* `entries` -- a dict storing every entry in the BRENDA flat file for a given EC number, with the exception of protein (see `proteins` above) and literature (see `references` above) references. Dict keys are section names in the BRENDA flat file, such as REACTION, SUBSTRATE_PRODUCT, etc. Dict values are lists of [`Entry`](#brenda-entries-entry-class) objects.
+  * `ec_number` -- a string designating the EC number.
+  * `comment` -- either `None` or a string representing a comment associated to an EC number.
+  * `proteins` -- a dict storing protein information for an EC number. Dict keys are numerical protein identifiers as they appearin the BRENDA flat file between `#...#` tags. Dict values are [`Protein`](#protein-information-protein-class) objects.
+  * `references` -- a dict storing literature references for an EC number (see [TODO](#TODO)).
+  * `entries` -- a dict storing every entry in the BRENDA flat file for a given EC number, with the exception of protein (see `proteins` above) and literature (see `references` above) references. Dict keys are section names in the BRENDA flat file, such as REACTION, SUBSTRATE_PRODUCT, etc. Dict values are lists of [`Entry`](#brenda-entries-entry-class) objects.
 
 For example, suppose you wish to list all EC numbers having an associated comment in the BRENDA flat file, such as:
 
@@ -70,11 +70,11 @@ Here is how to retrieve EC numbers with associated comments:
 
 For a given protein (recall that proteins are stored in a dict where keys are protein numerical identifiers between `#...#` tags in the BRENDA flat file), the following fields may be accessed:
 
-* `information` -- either `None` or a string representing information associated to the current protein (`{...}` tags in the BRENDA flat file).
-* `comment` -- [`EntryComment`](#brenda-comments-entrycomment-class) object representing a comment associated to the current protein.
-* `organism` -- string representing the species for which the current protein is reported present.
-* `identifiers` -- list of strings representing UniProt accessions for the current protein.
-* `references` -- list of numerical identifiers representing literature references for the current protein (`<...>` tags in the BRENDA flat file).
+  * `information` -- either `None` or a string representing information associated to the current protein (`{...}` tags in the BRENDA flat file).
+  * `comment` -- [`EntryComment`](#brenda-comments-entrycomment-class) object representing a comment associated to the current protein.
+  * `organism` -- string representing the species for which the current protein is reported present.
+  * `identifiers` -- list of strings representing UniProt accessions for the current protein.
+  * `references` -- list of numerical identifiers representing literature references for the current protein (`<...>` tags in the BRENDA flat file).
 
 For example, suppose you wish to display all protein information associated to EC number 6.6.1.2:
 
@@ -123,11 +123,11 @@ For example, suppose you wish to display all protein information associated to E
 
 The BRENDA flat file contains several sections for every EC number, such as REACTION, SUBSTRATE_PRODUCT, COFACTOR, etc. This information is encapsulated as a list of `Entry` objects. Each `Entry` has the following fields:
 
-* `msg` -- the `Entry` content.
-* `information` -- additional information on the `Entry` (`{...}` tags in the BRENDA flat file).
-* `comment` -- [`EntryComment`](#brenda-comments-entrycomment-class) object representing a comment associated to the current `Entry`.
-* `proteins` -- list of list of numerical identifiers representing protein references for the current `Entry` (`#...#` tags in the BRENDA flat file).
-* `references` -- list of list of numerical identifiers representing literature references for the current `Entry` (`<...>` tags in the BRENDA flat file).
+  * `msg` -- the `Entry` content.
+  * `information` -- additional information on the `Entry` (`{...}` tags in the BRENDA flat file).
+  * `comment` -- [`EntryComment`](#brenda-comments-entrycomment-class) object representing a comment associated to the current `Entry`.
+  * `proteins` -- list of list of numerical identifiers representing protein references for the current `Entry` (`#...#` tags in the BRENDA flat file).
+  * `references` -- list of list of numerical identifiers representing literature references for the current `Entry` (`<...>` tags in the BRENDA flat file).
 
 For example, suppose you wish to display information for the first SP (SUBSTRATE_PRODUCT) entry for EC number 1.1.1.261:
 
@@ -163,7 +163,7 @@ Note that protein and literature references in comments are stored in the order 
 
 BRENDA-Parser needs Python 3, as well as `recordclass`. Optionally, `nose` is needed to run the tests. You may install them with `pip`:
 
-```
+```bash
 pip install recordclass nose
 ```
 
@@ -171,27 +171,27 @@ pip install recordclass nose
 
 Run the tests in the `tests/` directory as follows:
 
-```
+```bash
 cd BRENDA-Parser
 nosetests tests/
 ```
 
 ## What is different with respect to the forked project
 
-* UniProt accessions:
-    * They are now [correctly](https://www.uniprot.org/help/accession_numbers) parsed (both 6- and 10-character accession types).
-    * They are sometimes present in the BRENDA flat file with different data bank identifiers ('UniProt', even 'Unipro' (!), 'SwissProt', 'GenBank', 'TrEMBL', 'EMBL'), with different combinations of upper- and lowercase letters. This is now taken care of.
-    * Sometimes the data bank identifier is not present, e.g. BRENDA contains entries such as `PR	#50# Plasmodium falciparum Q965D6  <17>`. This case is now handled.
-* EC numbers with associated comments are now handled (see [example](#ec-number-information-enzyme-class) above).
-* The BRENDA flat file is notoriously badly formatted.
-    * Empty information (`{}`) and comment (`()` or `||`, see below) fields are now ignored (whitespace included).
-    * `#` artifacts appearing in entries where they should not appear. Extra `#` characters are removed.
-    * Unmatched opening and closing parentheses in compound names led the initial parser to incorrectly delimit comments (typically between `(...)` tags). Unmatched parentheses in compound names are now ignored.
-    * Unmatched opening and closing parentheses in comments are now ignored and the comments are correctly retrieved.
-    * Some entries in the BRENDA flat file use the undocumented comment tags `|...|`. Sometimes only comments delimited by either `(...)` or `|...|` are present, and sometimes both are present. Such comments are now fused together.
-    * To make matters more interesting, there may also be extra `|` characters, seemingly inserted at random by BRENDA maintainers. This parser cleans up such spurious characters, then retrieves the (hopefully) correct comment.
-* The SOAP-parsing part has been removed.
-* The refactor/lexer branch has been removed (check out the [forked repository](https://github.com/Midnighter/BRENDA-Parser) for progress on that branch).
+  * UniProt accessions:
+      * They are now [correctly](https://www.uniprot.org/help/accession_numbers) parsed (both 6- and 10-character accession types).
+      * They are sometimes present in the BRENDA flat file with different data bank identifiers ('UniProt', even 'Unipro' (!), 'SwissProt', 'GenBank', 'TrEMBL', 'EMBL'), with different combinations of upper- and lowercase letters. This is now taken care of.
+      * Sometimes the data bank identifier is not present, e.g. BRENDA contains entries such as `PR	#50# Plasmodium falciparum Q965D6  <17>`. This case is now handled.
+  * EC numbers with associated comments are now handled (see [example](#ec-number-information-enzyme-class) above).
+  * The BRENDA flat file is notoriously badly formatted.
+      * Empty information (`{}`) and comment (`()` or `||`, see below) fields are now ignored (whitespace included).
+      * `#` artifacts appearing in entries where they should not appear. Extra `#` characters are removed.
+      * Unmatched opening and closing parentheses in compound names led the initial parser to incorrectly delimit comments (typically between `(...)` tags). Unmatched parentheses in compound names are now ignored.
+      * Unmatched opening and closing parentheses in comments are now ignored and the comments are correctly retrieved.
+      * Some entries in the BRENDA flat file use the undocumented comment tags `|...|`. Sometimes only comments delimited by either `(...)` or `|...|` are present, and sometimes both are present. Such comments are now fused together.
+      * To make matters more interesting, there may also be extra `|` characters, seemingly inserted at random by BRENDA maintainers. This parser cleans up such spurious characters, then retrieves the (hopefully) correct comment.
+  * The SOAP-parsing part has been removed.
+  * The refactor/lexer branch has been removed (check out the [forked repository](https://github.com/Midnighter/BRENDA-Parser) for progress on that branch).
 
 ## TODO
 
