@@ -59,7 +59,7 @@ def has_ec_number(text):
 
 
 def is_ec_number(text):
-    return re.match(r'[1-7](\.\d+){2}\.\d+', text) is not None
+    return re.match(r'[1-7](\.\d+){2}\.\d+$', text) is not None
 
 
 def init_tags():
