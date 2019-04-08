@@ -25,6 +25,7 @@ __all__ = ["BRENDAParser"]
 
 import re
 import codecs
+import typing
 
 from collections import defaultdict
 from recordclass import recordclass
@@ -489,7 +490,7 @@ class BRENDAParser:
         :param pattern: a re pattern
         :return: text resulting from number extraction
         """
-        if not isinstance(pattern, re.Pattern):
+        if not isinstance(pattern, typing.Pattern):
             raise ArgumentError('Expected re.Pattern: {}'.format(pattern))
 
         numbers = None
@@ -616,7 +617,7 @@ class BRENDAParser:
         :param pattern: pattern describing the numbers
         :return: the list of numbers in comment
         """
-        if not isinstance(pattern, re.Pattern):
+        if not isinstance(pattern, typing.Pattern):
             raise ArgumentError('Expected re.Pattern: {}'.format(pattern))
 
         if comment is None or not comment.strip():
